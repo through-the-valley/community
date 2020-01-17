@@ -2,6 +2,8 @@ package com.sekiro.community.controller;
 
 import com.sekiro.community.dto.AccessTokenDto;
 import com.sekiro.community.dto.GitHubUser;
+import com.sekiro.community.mapper.UserMapper;
+import com.sekiro.community.model.User;
 import com.sekiro.community.provider.GitHubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 /**
  * @Author dell
@@ -25,10 +30,13 @@ public class AuthorizeController {
     private String client_secret;
     @Value("${github.redirect.uri}")
     private String redirect_uri;
+    @Autowired
+    private UserMapper userMapper;
     @GetMapping("/callback")
     public String callBack(@RequestParam(name = "code")String code,
                            @RequestParam(name="state")String state,
-                           HttpServletRequest request){
+                           HttpServletRequest request,
+                            HttpServletResponse response){
         AccessTokenDto accessTokenDto = new AccessTokenDto();
         accessTokenDto.setCode(code);
         accessTokenDto.setState(state);
@@ -36,10 +44,20 @@ public class AuthorizeController {
         accessTokenDto.setClient_secret(client_secret);
         accessTokenDto.setRedirect_uri(redirect_uri);
         String accessToken = gitHubProvider.getAccessToken(accessTokenDto);
-        GitHubUser user = gitHubProvider.getUser(accessToken);
-        if(user!=null){
+        GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
+        if(gitHubUser!=null){
+
+            User user = new User();
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            user.setName(gitHubUser.getName());
+            user.setAccountId(String.valueOf(gitHubUser.getId()));
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            userMapper.insert(user);
+            response.addCookie(new Cookie("token",token));
             //登陆成功，写cookie和session
-            request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("user",gitHubUser);
             return "redirect:/";
         }else{
             //登陆失败，重新登陆
