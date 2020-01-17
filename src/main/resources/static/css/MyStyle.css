@@ -1,0 +1,13 @@
+body{
+    background-color: #d6efde;
+}
+
+.under{
+    margin:15px;
+    background-color: white;
+}
+
+.btn-submit{
+    float: right;
+    margin-bottom: 20px;
+}
