@@ -12,23 +12,12 @@
 - [mvn仓库](https://mvnrepository.com/)
 - [菜鸟教程](https://www.runoob.com/)
 - [flyway](https://flywaydb.org/getstarted/firststeps/maven)
+- [thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
 ##工具
 
 - [git](https://git-scm.com/download)
 - [visual-paradigm](https://www.visual-paradigm.com)
+- [flyway](https://flywaydb.org/getstarted/firststeps/maven)
+- [lombok](https://projectlombok.org/setup/maven)
 
 
-
-##脚本
-```sql
-    create table if not exists USER
-    (
-    	ID INT auto_increment primary key not null ,
-    	NAME VARCHAR(100),
-    	ACCOUNT_ID VARCHAR(200),
-    	TOKEN CHAR(36),
-    	GMT_CREATE BIGINT,
-    	GMT_MODIFIED BIGINT,
-    );
-    
-```
