@@ -1,5 +1,6 @@
 package com.sekiro.community.controller;
 
+import com.sekiro.community.dto.PageDTO;
 import com.sekiro.community.dto.QuestionDTO;
 import com.sekiro.community.mapper.UserMapper;
 import com.sekiro.community.model.User;
@@ -26,7 +27,9 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
     @GetMapping("/")
-    public String index(HttpServletRequest request,Model model){
+    public String index(HttpServletRequest request,Model model,
+                        @RequestParam(name = "page",defaultValue="1")Integer page,
+                        @RequestParam(name = "size",defaultValue="5")final Integer  size){
         Cookie[] cookies=request.getCookies();
         if(cookies!=null) {
             for (Cookie cookie : cookies) {
@@ -40,8 +43,8 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questions=questionService.list();
-        model.addAttribute("questions",questions);
+        PageDTO pages=questionService.list(page,size);
+        model.addAttribute("pages",pages);
         return "index";
     }
 

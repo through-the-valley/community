@@ -1,6 +1,6 @@
 package com.sekiro.community.controller;
 
-import com.sekiro.community.dto.AccessTokenDto;
+import com.sekiro.community.dto.AccessTokenDTO;
 import com.sekiro.community.dto.GitHubUser;
 import com.sekiro.community.mapper.UserMapper;
 import com.sekiro.community.model.User;
@@ -37,7 +37,7 @@ public class AuthorizeController {
                            @RequestParam(name="state")String state,
                            HttpServletRequest request,
                             HttpServletResponse response){
-        AccessTokenDto accessTokenDto = new AccessTokenDto();
+        AccessTokenDTO accessTokenDto = new AccessTokenDTO();
         accessTokenDto.setCode(code);
         accessTokenDto.setState(state);
         accessTokenDto.setClientId(client_id);

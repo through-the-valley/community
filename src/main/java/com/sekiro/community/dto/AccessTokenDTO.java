@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Data
-public class AccessTokenDto {
+public class AccessTokenDTO {
     private String clientId;
     private String clientSecret;
     private String code;

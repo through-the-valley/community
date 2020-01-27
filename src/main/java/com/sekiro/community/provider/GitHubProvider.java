@@ -1,7 +1,7 @@
 package com.sekiro.community.provider;
 
 import com.alibaba.fastjson.JSON;
-import com.sekiro.community.dto.AccessTokenDto;
+import com.sekiro.community.dto.AccessTokenDTO;
 import com.sekiro.community.dto.GitHubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.rmi.server.ExportException;
 public class GitHubProvider {
 
     //   要求传递的参数比较多的时候，不要一个一个放在形参，而是把它们封装成一个对象
-    public String getAccessToken(AccessTokenDto accessTokenDto){
+    public String getAccessToken(AccessTokenDTO accessTokenDto){
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
         OkHttpClient client = new OkHttpClient();
