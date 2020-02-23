@@ -48,4 +48,27 @@ public class QuestionService {
 
         return pageDTO;
     }
+
+    public PageDTO listByUserId(Integer userId, Integer page, Integer size) {
+        PageDTO pageDTO=new PageDTO();
+        Integer total=questionMapper.countByUserId(userId);
+        pageDTO.setPagination(total,page,size);
+        if(page<1) page=1;
+        if(page>pageDTO.getTotalPage()) page=pageDTO.getTotalPage();
+        Integer offset=size*(page-1);
+        List<Question> questions=questionMapper.listByUserId(userId,offset,size);
+        List<QuestionDTO> questionDTOList=new ArrayList<>();
+
+        for(Question question:questions){
+            User user=userMapper.findById(question.getCreator());
+            QuestionDTO questionDTO=new QuestionDTO();
+            //快速拷贝对象的属性
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+        pageDTO.setQuestions(questionDTOList);
+
+        return pageDTO;
+    }
 }
