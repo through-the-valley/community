@@ -5,6 +5,7 @@ import com.sekiro.community.dto.GitHubUser;
 import com.sekiro.community.mapper.UserMapper;
 import com.sekiro.community.model.User;
 import com.sekiro.community.provider.GitHubProvider;
+import com.sekiro.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,14 +25,16 @@ import java.util.UUID;
 public class AuthorizeController {
     @Autowired
     private GitHubProvider gitHubProvider;
+
+    @Autowired
+    private UserService userService;
     @Value("${github.client.id}")
     private String client_id;
     @Value("${github.client.secret}")
     private String client_secret;
     @Value("${github.redirect.uri}")
     private String redirect_uri;
-    @Autowired
-    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callBack(@RequestParam(name = "code")String code,
                            @RequestParam(name="state")String state,
@@ -52,10 +55,8 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(gitHubUser.getName());
             user.setAccountId(String.valueOf(gitHubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(gitHubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.CreateOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             //登陆成功，写cookie和session
             request.getSession().setAttribute("user",gitHubUser);
@@ -64,5 +65,15 @@ public class AuthorizeController {
             //登陆失败，重新登陆
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

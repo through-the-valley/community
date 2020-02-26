@@ -21,6 +21,7 @@
                 <h2><span class="glyphicon glyphicon-send" aria-hidden="true"></span> 发起</h2>
 
                 <form action="/publish" method="post">
+                    <input type="hidden" name="id" th:value="${id}">
                     <div class="form-group">
                         <label for="title">主题</label>
                         <input type="text" class="form-control" id="title" name="title" placeholder="..." th:value="${title}">
